@@ -1,26 +1,23 @@
 package ru.softmine.kotlin_libraries.mvp.presenter
 
-import ru.softmine.kotlin_libraries.R
 import ru.softmine.kotlin_libraries.mvp.model.CountersModel
 import ru.softmine.kotlin_libraries.mvp.view.MainView
 
-class MainPresenter(val mainView: MainView) {
-    val model = CountersModel()
+class MainPresenter(private val mainView: MainView) {
+    private val model = CountersModel()
 
-    fun counterClick(id: Int){
-        when(id){
-            R.id.btn_counter1 -> {
-                val nextValue = model.next(0)
-                mainView.setButtonText(0, nextValue.toString())
-            }
-            R.id.btn_counter2 -> {
-                val nextValue = model.next(1)
-                mainView.setButtonText(1, nextValue.toString())
-            }
-            R.id.btn_counter3 -> {
-                val nextValue = model.next(2)
-                mainView.setButtonText(2, nextValue.toString())
-            }
-        }
+    fun counter1Click() {
+        val nextValue = model.next(0)
+        mainView.setButton1Text(nextValue.toString())
+    }
+
+    fun counter2Click() {
+        val nextValue = model.next(1)
+        mainView.setButton2Text(nextValue.toString())
+    }
+
+    fun counter3Click() {
+        val nextValue = model.next(2)
+        mainView.setButton3Text(nextValue.toString())
     }
 }
