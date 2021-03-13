@@ -1,6 +1,9 @@
 package ru.softmine.kotlin_libraries.mvp.presenter
 
+import android.util.Log
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.model.GithubUsersRepo
@@ -21,6 +24,25 @@ class UsersPresenter(
     class UsersListPresenter : IUsersListPresenter {
         val users = mutableListOf<GithubUser>()
 
+        val repoObserver = object : Observer<GithubUser> {
+            override fun onSubscribe(d: Disposable?) {
+                users.clear()
+            }
+
+            override fun onNext(user: GithubUser?) {
+                user?.let { users.add(it) }
+            }
+
+            override fun onError(e: Throwable?) {
+                Log.e("UsersPresenter","Error: ${e?.message ?: "Unknown"}")
+            }
+
+            override fun onComplete() {
+                Log.d("UsersPresenter","OK!")
+            }
+
+        }
+
         override var itemClickListener: ((UserItemView) -> Unit)? = null
         override fun getCount() = users.size
         override fun bindView(view: UserItemView) {
@@ -37,15 +59,13 @@ class UsersPresenter(
         loadData()
 
         usersListPresenter.itemClickListener = { view ->
-            val githubUser = usersListPresenter.users[view.pos]
+            val githubUser = usersRepo.getUser(view.pos + 1)
             router.navigateTo(screens.user(githubUser))
         }
     }
 
     private fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.clear()
-        usersListPresenter.users.addAll(users)
+        usersRepo.getUsers().subscribe(usersListPresenter.repoObserver)
         viewState.updateList()
     }
 
