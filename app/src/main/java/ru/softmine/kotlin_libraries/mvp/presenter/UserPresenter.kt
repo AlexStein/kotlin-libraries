@@ -16,6 +16,7 @@ class UserPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setLogin(githubUser.login)
+        viewState.setName(githubUser.fullName)
     }
 
     fun backClick(): Boolean {

@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
 import ru.softmine.kotlin_libraries.databinding.FragmentUserBinding
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.presenter.UserPresenter
@@ -48,6 +46,10 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
     override fun setLogin(text: String) {
         vb?.textViewLogin?.text = text
+    }
+
+    override fun setName(text: String) {
+        vb?.textViewName?.text = text
     }
 
     override fun backPressed() = presenter.backClick()
