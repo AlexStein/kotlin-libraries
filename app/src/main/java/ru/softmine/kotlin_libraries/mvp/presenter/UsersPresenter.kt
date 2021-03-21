@@ -3,6 +3,7 @@ package ru.softmine.kotlin_libraries.mvp.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -15,33 +16,15 @@ import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
 
 @InjectViewState
 class UsersPresenter(
-    private val usersRepo: GithubUsersRepo,
-    private val router: Router,
-    private val screens: IScreens
+        private val uiScheduler: Scheduler,
+        private val usersRepo: GithubUsersRepo,
+        private val router: Router,
+        private val screens: IScreens
 ) :
-    MvpPresenter<UsersView>() {
+        MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUsersListPresenter {
         val users = mutableListOf<GithubUser>()
-
-        val repoObserver = object : Observer<GithubUser> {
-            override fun onSubscribe(d: Disposable?) {
-                users.clear()
-            }
-
-            override fun onNext(user: GithubUser?) {
-                user?.let { users.add(it) }
-            }
-
-            override fun onError(e: Throwable?) {
-                Log.e("UsersPresenter","Error: ${e?.message ?: "Unknown"}")
-            }
-
-            override fun onComplete() {
-                Log.d("UsersPresenter","OK!")
-            }
-
-        }
 
         override var itemClickListener: ((UserItemView) -> Unit)? = null
         override fun getCount() = users.size
@@ -65,8 +48,15 @@ class UsersPresenter(
     }
 
     private fun loadData() {
-        usersRepo.getUsers().subscribe(usersListPresenter.repoObserver)
-        viewState.updateList()
+        usersRepo.getUsers()
+                .observeOn(uiScheduler)
+                .subscribe({ repos ->
+                    usersListPresenter.users.clear()
+                    usersListPresenter.users.addAll(repos)
+                    viewState.updateList()
+                }, {
+                    println("Error: ${it.message}")
+                })
     }
 
     fun backClick(): Boolean {
