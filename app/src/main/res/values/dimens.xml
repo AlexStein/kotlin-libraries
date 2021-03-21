@@ -3,4 +3,8 @@
     <dimen name="margin">16dp</dimen>
     <dimen name="item_height">48dp</dimen>
     <dimen name="avatar_size">42dp</dimen>
+    <dimen name="repo_name_text_size">24sp</dimen>
+    <dimen name="description_margin">8dp</dimen>
+    <dimen name="user_name_text_size">32sp</dimen>
+    <dimen name="user_list_name_text_size">24sp</dimen>
 </resources>

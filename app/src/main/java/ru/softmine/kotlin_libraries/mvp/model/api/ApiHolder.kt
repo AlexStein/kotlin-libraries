@@ -6,6 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val BASE_URI = "https://api.github.com/"
+
 object ApiHolder {
     private val gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -14,7 +16,7 @@ object ApiHolder {
 
     val api: IDataSource by lazy {
         Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
+            .baseUrl(BASE_URI)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

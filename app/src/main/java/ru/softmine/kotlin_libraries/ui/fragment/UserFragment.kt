@@ -3,14 +3,19 @@ package ru.softmine.kotlin_libraries.ui.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.softmine.kotlin_libraries.databinding.FragmentUserBinding
+import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
+import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubUsersRepo
 import ru.softmine.kotlin_libraries.mvp.presenter.UserPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
+import ru.softmine.kotlin_libraries.ui.adapter.ReposRecycleViewAdapter
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
@@ -26,10 +31,15 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
     private val presenter: UserPresenter by moxyPresenter {
         val githubUser = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
-        UserPresenter(githubUser, App.instance.router)
+        UserPresenter(
+            AndroidSchedulers.mainThread(),
+            RetrofitGithubUsersRepo(ApiHolder.api),
+            githubUser,
+            App.instance.router)
     }
 
     private var vb: FragmentUserBinding? = null
+    private var adapter: ReposRecycleViewAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +58,15 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
         vb?.textViewLogin?.text = text
     }
 
-    override fun setName(text: String) {
-        vb?.textViewName?.text = text
+    override fun initList() {
+        adapter = ReposRecycleViewAdapter(presenter.reposListPresenter)
+
+        vb?.recyclerViewUserRepos?.layoutManager = LinearLayoutManager(context)
+        vb?.recyclerViewUserRepos?.adapter = adapter
+    }
+
+    override fun loadReposList() {
+        adapter?.notifyDataSetChanged()
     }
 
     override fun backPressed() = presenter.backClick()
