@@ -6,4 +6,5 @@ import moxy.viewstate.strategy.StateStrategyType
 interface IUserItemView : IItemView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setLogin(text: String)
+    fun loadAvatar(url: String)
 }

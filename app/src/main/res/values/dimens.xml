@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin">16dp</dimen>
     <dimen name="item_height">48dp</dimen>
+    <dimen name="avatar_size">42dp</dimen>
 </resources>
