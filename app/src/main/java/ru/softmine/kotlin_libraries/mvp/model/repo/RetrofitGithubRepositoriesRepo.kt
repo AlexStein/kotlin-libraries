@@ -6,6 +6,7 @@ import ru.softmine.kotlin_libraries.mvp.model.api.IDataSource
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.model.network.INetworkStatus
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IGithubRepositoriesRepo
 
 
 class RetrofitGithubRepositoriesRepo(

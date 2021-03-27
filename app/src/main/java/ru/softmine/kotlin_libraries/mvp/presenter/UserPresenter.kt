@@ -6,7 +6,7 @@ import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
-import ru.softmine.kotlin_libraries.mvp.model.repo.IGithubRepositoriesRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IGithubRepositoriesRepo
 import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IReposListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView

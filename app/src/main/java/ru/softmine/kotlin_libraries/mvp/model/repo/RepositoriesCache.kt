@@ -6,8 +6,9 @@ import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.model.entity.room.RoomGithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IRepositoriesCache
 
-class RepositoriesCache(val db: Database): IRepositoriesCache {
+class RepositoriesCache(private val db: Database): IRepositoriesCache {
     override fun putRepositories(
         user: GithubUser,
         repositories: List<GithubRepo>

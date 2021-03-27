@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.softmine.kotlin_libraries.databinding.ItemUserBinding
+import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 import ru.softmine.kotlin_libraries.mvp.model.image.IImageLoader
+import ru.softmine.kotlin_libraries.mvp.model.repo.ImageCache
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IUsersListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
 
@@ -30,7 +32,8 @@ class UsersRVAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         presenter.bindView(holder.apply { pos = position })
 
-    inner class ViewHolder(val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root),
+
+    inner class ViewHolder(private val vb: ItemUserBinding) : RecyclerView.ViewHolder(vb.root),
         UserItemView {
         override var pos = -1
 
@@ -39,7 +42,7 @@ class UsersRVAdapter(
         }
 
         override fun loadAvatar(url: String) = with(vb) {
-            imageLoader.load(url, imageAvatar)
+            imageLoader.load(url, imageAvatar, ImageCache(Database.getInstance()))
         }
     }
 }
