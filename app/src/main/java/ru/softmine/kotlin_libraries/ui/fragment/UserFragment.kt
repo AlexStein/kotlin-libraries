@@ -11,7 +11,8 @@ import ru.softmine.kotlin_libraries.databinding.FragmentUserBinding
 import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
-import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubUsersRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.RepositoriesCache
+import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubRepositoriesRepo
 import ru.softmine.kotlin_libraries.mvp.presenter.UserPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.ui.App
@@ -36,10 +37,10 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
         val githubUser = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
         UserPresenter(
             AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(
+            RetrofitGithubRepositoriesRepo(
                 ApiHolder.api,
                 AndroidNetworkStatus(App.instance),
-                Database.getInstance()
+                RepositoriesCache(Database.getInstance())
             ),
             githubUser,
             App.instance.router,

@@ -11,6 +11,7 @@ import ru.softmine.kotlin_libraries.databinding.FragmentUsersBinding
 import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
 import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubUsersRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.UsersCache
 import ru.softmine.kotlin_libraries.mvp.presenter.UsersPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UsersView
 import ru.softmine.kotlin_libraries.ui.App
@@ -32,7 +33,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
             RetrofitGithubUsersRepo(
                 ApiHolder.api,
                 AndroidNetworkStatus(App.instance),
-                Database.getInstance()
+                UsersCache(Database.getInstance())
             ),
             App.instance.router,
             AndroidScreens()
