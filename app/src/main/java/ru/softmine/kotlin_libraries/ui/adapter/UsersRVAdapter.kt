@@ -12,8 +12,7 @@ import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
 class UsersRVAdapter(
     private val presenter: IUsersListPresenter,
     val imageLoader: IImageLoader<ImageView>
-) :
-    RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(

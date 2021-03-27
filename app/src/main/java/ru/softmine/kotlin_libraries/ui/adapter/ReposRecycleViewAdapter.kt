@@ -9,8 +9,7 @@ import ru.softmine.kotlin_libraries.mvp.view.list.IRepoItemView
 
 class ReposRecycleViewAdapter(
     private val presenter: IReposListPresenter
-) :
-    RecyclerView.Adapter<ReposRecycleViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ReposRecycleViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -19,7 +18,10 @@ class ReposRecycleViewAdapter(
                 parent,
                 false
             )
-        )
+        ).apply {
+            itemView.setOnClickListener { presenter.itemClickListener?.invoke(this) }
+        }
+
 
     override fun getItemCount() = presenter.getCount()
 
@@ -35,7 +37,7 @@ class ReposRecycleViewAdapter(
         }
 
         override fun setDescription(description: String?) = with(vb) {
-            description.let {textViewDescription.text = it }
+            description.let { textViewDescription.text = it }
         }
     }
 }

@@ -3,6 +3,7 @@ package ru.softmine.kotlin_libraries.ui
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
+import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 
 class App : Application() {
 
@@ -20,6 +21,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Database.create(this)
     }
 
 }

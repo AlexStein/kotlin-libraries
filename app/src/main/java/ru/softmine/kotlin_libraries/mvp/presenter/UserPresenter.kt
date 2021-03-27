@@ -7,6 +7,7 @@ import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.model.repo.IGithubUsersRepo
+import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IReposListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.mvp.view.list.IRepoItemView
@@ -16,7 +17,8 @@ class UserPresenter(
     private val uiScheduler: Scheduler,
     private val usersRepo: IGithubUsersRepo,
     private val githubUser: GithubUser,
-    private val router: Router
+    private val router: Router,
+    private val screens: IScreens
 ) :
     MvpPresenter<UserView>() {
 
@@ -39,6 +41,11 @@ class UserPresenter(
         viewState.setLogin(githubUser.login)
         viewState.initList()
         loadReposList()
+
+        reposListPresenter.itemClickListener = { itemView ->
+            val repository = reposListPresenter.repos[itemView.pos]
+            router.navigateTo(screens.repository(repository))
+        }
     }
 
     private fun loadReposList() {

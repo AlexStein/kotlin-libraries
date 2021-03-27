@@ -10,12 +10,15 @@ import moxy.ktx.moxyPresenter
 import ru.softmine.kotlin_libraries.databinding.FragmentUserBinding
 import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
+import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubUsersRepo
 import ru.softmine.kotlin_libraries.mvp.presenter.UserPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
 import ru.softmine.kotlin_libraries.ui.adapter.ReposRecycleViewAdapter
+import ru.softmine.kotlin_libraries.ui.navigation.AndroidScreens
+import ru.softmine.kotlin_libraries.ui.network.AndroidNetworkStatus
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
@@ -33,9 +36,15 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
         val githubUser = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
         UserPresenter(
             AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(ApiHolder.api),
+            RetrofitGithubUsersRepo(
+                ApiHolder.api,
+                AndroidNetworkStatus(App.instance),
+                Database.getInstance()
+            ),
             githubUser,
-            App.instance.router)
+            App.instance.router,
+            AndroidScreens()
+        )
     }
 
     private var vb: FragmentUserBinding? = null
