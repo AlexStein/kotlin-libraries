@@ -1,8 +1,6 @@
 package ru.softmine.kotlin_libraries.ui.image
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -10,69 +8,64 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import ru.softmine.kotlin_libraries.R
 import ru.softmine.kotlin_libraries.mvp.model.image.IImageLoader
+import ru.softmine.kotlin_libraries.mvp.model.network.INetworkStatus
 import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IImageCache
 import java.io.ByteArrayOutputStream
 
 
-class GlideImageLoader : IImageLoader<ImageView> {
+class GlideImageLoader(
+    val imageCache: IImageCache,
+    val networkStatus: INetworkStatus,
+    val location: String
+) :
+    IImageLoader<ImageView> {
 
-    override fun load(url: String, container: ImageView, imageCache: IImageCache) {
-
-        Glide.with(container.context)
-            .asBitmap()
-            .load(url)
-            .placeholder(R.drawable.ic_launcher_background)
-            .error(R.drawable.ic_launcher_background)
-            .listener(object : RequestListener<Bitmap> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Bitmap>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    imageCache.getImage(url)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ byteArray ->
-                            byteArray?.let {
-                                container.setImageBitmap(
-                                    BitmapFactory.decodeByteArray(
-                                        byteArray,0,byteArray.size
-                                    )
-                                )
+    override fun load(url: String, container: ImageView) {
+        networkStatus.isOnlineSingle()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { isOnline ->
+                if (isOnline) {
+                    Glide.with(container.context)
+                        .asBitmap()
+                        .load(url)
+                        .listener(object : RequestListener<Bitmap> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Bitmap>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                return true
                             }
-                        }, {
-                            Log.e("GlideImageLoader", it.message.toString())
+
+                            override fun onResourceReady(
+                                resource: Bitmap?,
+                                model: Any?,
+                                target: Target<Bitmap>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                val compressFormat =
+                                    if (url.contains(".jpg")) Bitmap.CompressFormat.JPEG else Bitmap.CompressFormat.PNG
+                                val stream = ByteArrayOutputStream()
+                                resource?.compress(compressFormat, 100, stream)
+                                val bytes = stream.use { it.toByteArray() }
+                                imageCache.putImage(url, location, bytes)
+                                return false
+                            }
                         })
-                    return false
-                }
+                        .into(container)
+                } else {
+                    imageCache.getImage(url).observeOn(AndroidSchedulers.mainThread()).subscribe({
+                        Glide.with(container.context)
+                            .load(it)
+                            .into(container)
+                    }, {
 
-                override fun onResourceReady(
-                    resource: Bitmap?,
-                    model: Any?,
-                    target: Target<Bitmap>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    resource?.let { bmp ->
-                        val location: String = container.context.filesDir.path.toString()
-                        val stream = ByteArrayOutputStream()
-                        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        val byteArray: ByteArray = stream.toByteArray()
-
-                        try {
-                            imageCache.putImage(url, location, byteArray)
-                        } catch (e: Exception) {
-                            Log.d("GlideImageLoader", e.message.toString())
-                        }
-                    }
-                    return false
+                    })
                 }
-            })
-            .into(container)
+            }
     }
 
 }

@@ -7,12 +7,13 @@ import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
 import ru.softmine.kotlin_libraries.mvp.model.network.INetworkStatus
 import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IGithubRepositoriesRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IRepositoriesCache
 
 
 class RetrofitGithubRepositoriesRepo(
     private val api: IDataSource,
     private val networkStatus: INetworkStatus,
-    private val reposCache: RepositoriesCache
+    private val reposCache: IRepositoriesCache
 ) : IGithubRepositoriesRepo {
 
     override fun getRepositories(user: GithubUser): Single<List<GithubRepo>> =

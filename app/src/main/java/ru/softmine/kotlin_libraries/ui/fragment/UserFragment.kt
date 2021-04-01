@@ -4,21 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.softmine.kotlin_libraries.databinding.FragmentUserBinding
-import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
-import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
-import ru.softmine.kotlin_libraries.mvp.model.repo.RepositoriesCache
-import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubRepositoriesRepo
 import ru.softmine.kotlin_libraries.mvp.presenter.UserPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
 import ru.softmine.kotlin_libraries.ui.adapter.ReposRecycleViewAdapter
-import ru.softmine.kotlin_libraries.ui.network.AndroidNetworkStatus
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
@@ -34,15 +28,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
 
     private val presenter: UserPresenter by moxyPresenter {
         val githubUser = arguments?.getParcelable<GithubUser>(USER_ARG) as GithubUser
-        UserPresenter(
-            AndroidSchedulers.mainThread(),
-            RetrofitGithubRepositoriesRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(App.instance),
-                RepositoriesCache(Database.getInstance())
-            ),
-            githubUser
-        ).apply {
+        UserPresenter(githubUser).apply {
             App.instance.appComponent.inject(this)
         }
     }

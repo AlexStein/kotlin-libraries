@@ -10,6 +10,7 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
+        lateinit var imageLocation: String
     }
 
     lateinit var appComponent: AppComponent
@@ -17,6 +18,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        imageLocation = this.filesDir.toString()
+
         Database.create(this)
 
         appComponent = DaggerAppComponent.builder()

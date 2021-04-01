@@ -1,4 +1,4 @@
-package ru.softmine.kotlin_libraries.mvp.model.repo
+package ru.softmine.kotlin_libraries.mvp.model.repo.cache
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -8,11 +8,12 @@ import ru.softmine.kotlin_libraries.mvp.model.entity.room.RoomGithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IRepositoriesCache
 
-class RepositoriesCache(private val db: Database): IRepositoriesCache {
+class RepositoriesCache(private val db: Database) : IRepositoriesCache {
+
     override fun putRepositories(
         user: GithubUser,
         repositories: List<GithubRepo>
-    ):Completable {
+    ): Completable {
         return Completable.fromAction {
             Single.fromCallable {
                 val roomUser = db.userDao.findByLogin(user.login)

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.softmine.kotlin_libraries.databinding.FragmentUsersBinding
@@ -13,7 +12,6 @@ import ru.softmine.kotlin_libraries.mvp.view.UsersView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
 import ru.softmine.kotlin_libraries.ui.adapter.UsersRVAdapter
-import ru.softmine.kotlin_libraries.ui.image.GlideImageLoader
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
@@ -22,9 +20,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
     }
 
     private val presenter by moxyPresenter {
-        UsersPresenter(
-            AndroidSchedulers.mainThread()
-        ).apply {
+        UsersPresenter().apply {
             App.instance.appComponent.inject(this)
         }
     }
@@ -46,7 +42,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
     }
 
     override fun init() {
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = UsersRVAdapter(presenter.usersListPresenter)
+        adapter?.let {
+            App.instance.appComponent.inject(it)
+        }
 
         vb?.recyclerViewUsers?.layoutManager = LinearLayoutManager(context)
         vb?.recyclerViewUsers?.adapter = adapter
