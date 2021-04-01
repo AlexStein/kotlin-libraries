@@ -18,7 +18,6 @@ import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
 import ru.softmine.kotlin_libraries.ui.adapter.ReposRecycleViewAdapter
-import ru.softmine.kotlin_libraries.ui.navigation.AndroidScreens
 import ru.softmine.kotlin_libraries.ui.network.AndroidNetworkStatus
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
@@ -42,10 +41,10 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackClickListener {
                 AndroidNetworkStatus(App.instance),
                 RepositoriesCache(Database.getInstance())
             ),
-            githubUser,
-            App.instance.router,
-            AndroidScreens()
-        )
+            githubUser
+        ).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private var vb: FragmentUserBinding? = null

@@ -10,14 +10,16 @@ import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IUsersListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UsersView
 import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
+import javax.inject.Inject
 
 @InjectViewState
 class UsersPresenter(
-    private val uiScheduler: Scheduler,
-    private val usersRepo: IGithubUsersRepo,
-    private val router: Router,
-    private val screens: IScreens
+    private val uiScheduler: Scheduler
 ) : MvpPresenter<UsersView>() {
+
+    @Inject lateinit var usersRepo: IGithubUsersRepo
+    @Inject lateinit var screens: IScreens
+    @Inject lateinit var router: Router
 
     class UsersListPresenter : IUsersListPresenter {
         val users = mutableListOf<GithubUser>()

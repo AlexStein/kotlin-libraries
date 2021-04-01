@@ -8,18 +8,12 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.softmine.kotlin_libraries.databinding.FragmentUsersBinding
-import ru.softmine.kotlin_libraries.mvp.model.api.ApiHolder
-import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
-import ru.softmine.kotlin_libraries.mvp.model.repo.RetrofitGithubUsersRepo
-import ru.softmine.kotlin_libraries.mvp.model.repo.UsersCache
 import ru.softmine.kotlin_libraries.mvp.presenter.UsersPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UsersView
 import ru.softmine.kotlin_libraries.ui.App
 import ru.softmine.kotlin_libraries.ui.BackClickListener
 import ru.softmine.kotlin_libraries.ui.adapter.UsersRVAdapter
 import ru.softmine.kotlin_libraries.ui.image.GlideImageLoader
-import ru.softmine.kotlin_libraries.ui.navigation.AndroidScreens
-import ru.softmine.kotlin_libraries.ui.network.AndroidNetworkStatus
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
@@ -29,15 +23,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackClickListener {
 
     private val presenter by moxyPresenter {
         UsersPresenter(
-            AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(App.instance),
-                UsersCache(Database.getInstance())
-            ),
-            App.instance.router,
-            AndroidScreens()
-        )
+            AndroidSchedulers.mainThread()
+        ).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     private var vb: FragmentUsersBinding? = null

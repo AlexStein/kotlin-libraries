@@ -5,10 +5,14 @@ import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.view.MainView
+import javax.inject.Inject
 
 @InjectViewState
-class MainPresenter(private val router: Router, private val screens: IScreens) :
+class MainPresenter() :
     MvpPresenter<MainView>() {
+
+    @Inject lateinit var router: Router
+    @Inject lateinit var screens: IScreens
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
