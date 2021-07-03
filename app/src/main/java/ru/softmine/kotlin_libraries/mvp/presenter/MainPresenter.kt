@@ -1,23 +1,22 @@
 package ru.softmine.kotlin_libraries.mvp.presenter
 
-import ru.softmine.kotlin_libraries.mvp.model.CountersModel
+import com.github.terrakok.cicerone.Router
+import moxy.InjectViewState
+import moxy.MvpPresenter
+import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.view.MainView
 
-class MainPresenter(private val mainView: MainView) {
-    private val model = CountersModel()
+@InjectViewState
+class MainPresenter(private val router: Router, private val screens: IScreens) :
+    MvpPresenter<MainView>() {
 
-    fun counter1Click() {
-        val nextValue = model.next(0)
-        mainView.setButton1Text(nextValue.toString())
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        router.replaceScreen(screens.users())
     }
 
-    fun counter2Click() {
-        val nextValue = model.next(1)
-        mainView.setButton2Text(nextValue.toString())
+    fun backClicked() {
+        router.exit()
     }
 
-    fun counter3Click() {
-        val nextValue = model.next(2)
-        mainView.setButton3Text(nextValue.toString())
-    }
 }
