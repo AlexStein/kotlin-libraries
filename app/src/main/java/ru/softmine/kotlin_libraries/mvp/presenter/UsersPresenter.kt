@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
-import ru.softmine.kotlin_libraries.mvp.model.repo.IGithubUsersRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IGithubUsersRepo
 import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IUsersListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UsersView
@@ -13,12 +13,11 @@ import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
 
 @InjectViewState
 class UsersPresenter(
-        private val uiScheduler: Scheduler,
-        private val usersRepo: IGithubUsersRepo,
-        private val router: Router,
-        private val screens: IScreens
-) :
-        MvpPresenter<UsersView>() {
+    private val uiScheduler: Scheduler,
+    private val usersRepo: IGithubUsersRepo,
+    private val router: Router,
+    private val screens: IScreens
+) : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUsersListPresenter {
         val users = mutableListOf<GithubUser>()

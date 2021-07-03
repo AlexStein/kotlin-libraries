@@ -6,7 +6,7 @@ import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubRepo
 import ru.softmine.kotlin_libraries.mvp.model.entity.GithubUser
-import ru.softmine.kotlin_libraries.mvp.model.repo.IGithubUsersRepo
+import ru.softmine.kotlin_libraries.mvp.model.repo.interfaces.IGithubRepositoriesRepo
 import ru.softmine.kotlin_libraries.mvp.navigation.IScreens
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IReposListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
@@ -15,12 +15,11 @@ import ru.softmine.kotlin_libraries.mvp.view.list.IRepoItemView
 @InjectViewState
 class UserPresenter(
     private val uiScheduler: Scheduler,
-    private val usersRepo: IGithubUsersRepo,
+    private val repositoriesRepo: IGithubRepositoriesRepo,
     private val githubUser: GithubUser,
     private val router: Router,
     private val screens: IScreens
-) :
-    MvpPresenter<UserView>() {
+) : MvpPresenter<UserView>() {
 
     class ReposListPresenter : IReposListPresenter {
         val repos = mutableListOf<GithubRepo>()
@@ -49,7 +48,7 @@ class UserPresenter(
     }
 
     private fun loadReposList() {
-        usersRepo.getUserRepos(githubUser.login)
+        repositoriesRepo.getRepositories(githubUser)
             .observeOn(uiScheduler)
             .subscribe({ repos ->
                 reposListPresenter.repos.clear()
