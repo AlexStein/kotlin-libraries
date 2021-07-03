@@ -12,14 +12,13 @@ import ru.softmine.kotlin_libraries.mvp.presenter.list.IReposListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.UserView
 import ru.softmine.kotlin_libraries.mvp.view.list.IRepoItemView
 import javax.inject.Inject
+import javax.inject.Named
 
 @InjectViewState
-class UserPresenter(
-    private val uiScheduler: Scheduler,
-    private val repositoriesRepo: IGithubRepositoriesRepo,
-    private val githubUser: GithubUser
-) : MvpPresenter<UserView>() {
+class UserPresenter(private val githubUser: GithubUser) : MvpPresenter<UserView>() {
 
+    @field:Named("ui") @Inject lateinit var uiScheduler: Scheduler
+    @Inject lateinit var repositoriesRepo: IGithubRepositoriesRepo
     @Inject lateinit var router: Router
     @Inject lateinit var screens: IScreens
 

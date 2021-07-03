@@ -5,16 +5,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.softmine.kotlin_libraries.databinding.ItemUserBinding
-import ru.softmine.kotlin_libraries.mvp.model.entity.room.db.Database
 import ru.softmine.kotlin_libraries.mvp.model.image.IImageLoader
-import ru.softmine.kotlin_libraries.mvp.model.repo.ImageCache
 import ru.softmine.kotlin_libraries.mvp.presenter.list.IUsersListPresenter
 import ru.softmine.kotlin_libraries.mvp.view.list.UserItemView
+import ru.softmine.kotlin_libraries.ui.App
+import javax.inject.Inject
 
 class UsersRVAdapter(
-    private val presenter: IUsersListPresenter,
-    val imageLoader: IImageLoader<ImageView>
+    private val presenter: IUsersListPresenter
 ) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+
+    @Inject lateinit var imageLoader: IImageLoader<ImageView>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
@@ -42,7 +43,7 @@ class UsersRVAdapter(
         }
 
         override fun loadAvatar(url: String) = with(vb) {
-            imageLoader.load(url, imageAvatar, ImageCache(Database.getInstance()))
+            imageLoader.load(url, imageAvatar)
         }
     }
 }

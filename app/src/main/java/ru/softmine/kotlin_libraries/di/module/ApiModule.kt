@@ -22,10 +22,6 @@ class ApiModule {
     @Provides
     fun baseUrl(): String = "https://api.github.com"
 
-    @Named("other")
-    @Provides
-    fun otherString(): String = "124124"
-
     @Provides
     @Singleton
     fun api(@Named("baseUrl") baseUrl: String, gson: Gson): IDataSource = Retrofit.Builder()

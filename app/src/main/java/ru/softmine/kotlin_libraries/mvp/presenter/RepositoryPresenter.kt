@@ -9,8 +9,7 @@ import javax.inject.Inject
 class RepositoryPresenter(private val githubRepository: GithubRepo) :
     MvpPresenter<RepositoryView>() {
 
-    @Inject
-    lateinit var router: Router
+    @Inject lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
